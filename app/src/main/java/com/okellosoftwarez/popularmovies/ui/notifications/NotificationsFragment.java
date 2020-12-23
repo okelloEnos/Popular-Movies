@@ -41,8 +41,6 @@ public class NotificationsFragment extends Fragment {
         movieLayoutManager = new LinearLayoutManager(getActivity());
         movieRecyclerView.setLayoutManager(movieLayoutManager);
         movieRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//        movieAdapter = new MovieAdapter(getActivity(), null);
-//        movieRecyclerView.setAdapter(movieAdapter);
 
         notificationsViewModel.getMovie_list().observe(getViewLifecycleOwner(), new Observer<List<results>>() {
             @Override
@@ -51,12 +49,6 @@ public class NotificationsFragment extends Fragment {
                 movieRecyclerView.setAdapter(movieAdapter);
             }
         });
-//        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
         return root;
     }
 }
