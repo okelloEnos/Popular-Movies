@@ -13,9 +13,6 @@ public interface MovieInterface {
     String BASE_URL = "https://api.themoviedb.org/3/movie/";
 
     @GET("popular?api_key=27dada59165b58ea926aae10fb0ea263&language=en-US&page=1")
-    Call<List<results>> getMovies();
-
-    @GET("popular?api_key=27dada59165b58ea926aae10fb0ea263&language=en-US&page=1")
     Call<detail> getMoviesPerPage();
 
 }

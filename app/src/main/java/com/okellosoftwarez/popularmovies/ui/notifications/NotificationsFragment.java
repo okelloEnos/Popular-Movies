@@ -1,9 +1,14 @@
 package com.okellosoftwarez.popularmovies.ui.notifications;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.okellosoftwarez.popularmovies.R;
 import com.okellosoftwarez.popularmovies.ui.model.results;
@@ -25,6 +31,8 @@ public class NotificationsFragment extends Fragment {
     private MovieAdapter movieAdapter;
     private List<com.okellosoftwarez.popularmovies.ui.model.results> results;
     private RecyclerView.LayoutManager movieLayoutManager;
+    private String TAG = "NotFrag";
+    private MovieDB movieDB;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,13 +50,32 @@ public class NotificationsFragment extends Fragment {
         movieRecyclerView.setLayoutManager(movieLayoutManager);
         movieRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        notificationsViewModel.getMovie_list().observe(getViewLifecycleOwner(), new Observer<List<results>>() {
+        movieDB = Room.databaseBuilder(getActivity(), MovieDB.class, "Movies_db").fallbackToDestructiveMigration().build();
+
+        if (isNetworkConnected(getActivity())){
+            notificationsViewModel.getMovie_listFromRemoteDB(getActivity());
+            Log.d(TAG, "onCreateView: isNetConnected");
+        }
+        else {
+            Toast.makeText(getActivity(), "No Internet Found Displaying Cached Data...", Toast.LENGTH_SHORT).show();
+        }
+
+        notificationsViewModel.getMovie_listFromLocalDB(getActivity()).observe(getViewLifecycleOwner(), new Observer<List<results>>() {
             @Override
             public void onChanged(List<results> results) {
+                Log.d(TAG, "onChanged: LocalDB");
                 movieAdapter = new MovieAdapter(getActivity(), results);
                 movieRecyclerView.setAdapter(movieAdapter);
             }
         });
         return root;
+    }
+
+    private boolean isNetworkConnected(Context context){
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+
     }
 }

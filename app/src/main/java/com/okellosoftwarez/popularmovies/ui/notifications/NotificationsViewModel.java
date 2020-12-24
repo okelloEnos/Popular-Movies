@@ -1,9 +1,8 @@
 package com.okellosoftwarez.popularmovies.ui.notifications;
 
-import android.util.Log;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.okellosoftwarez.popularmovies.ui.model.results;
@@ -17,10 +16,16 @@ public class NotificationsViewModel extends ViewModel {
     private MovieRepository movieRepository = MovieRepository.getRepositoryInstance();
 
 
-    public LiveData<List<results>> getMovie_list(){
+    public LiveData<List<results>> getMovie_listFromRemoteDB(Context context){
 
-            movie_list = movieRepository.getMovies();
+            movie_list = movieRepository.getMoviesFromRemote(context);
 
+        return movie_list;
+    }
+
+    public LiveData<List<results>> getMovie_listFromLocalDB(Context context) {
+
+        movie_list = movieRepository.getMoviesFromDB(context);
         return movie_list;
     }
 }

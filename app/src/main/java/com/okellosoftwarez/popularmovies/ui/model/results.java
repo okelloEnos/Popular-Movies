@@ -1,12 +1,28 @@
 package com.okellosoftwarez.popularmovies.ui.model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "Movies")
 public class results {
+    @ColumnInfo(name = "Title")
     private String title;
+    @ColumnInfo(name = "Vote_Average")
     private String vote_average;
+    @ColumnInfo(name = "Poster_Path")
     private String poster_path;
+    @ColumnInfo(name = "Release_Date")
     private String release_date;
+    @ColumnInfo(name = "Overview")
     private String overview;
+    @PrimaryKey
     private Integer id;
+//    private String vote_average;
+//    private String poster_path;
+//    private String release_date;
+//    private String overview;
+//    private Integer id;
 //    private String imageBaseUrl = "https://image.tmdb.org/t/p/original";
 
     public results(String title, String vote_average, String poster_path, String release_date, String overview, Integer id) {
